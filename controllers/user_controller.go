@@ -81,9 +81,9 @@ func EditAUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: &echo.Map{"data": validationError.Error()}})
 	}
 
-	update := bson.M{"name": user.Name, "location": user.Location, "title": user.Location}
+	update := bson.M{"name": user.Name, "location": user.Location, "title": user.Title}
 
-	result, err := userCollection.UpdateOne(ctx, bson.M{"id": objId}, update)
+	result, err := userCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: &echo.Map{"data": err.Error()}})
